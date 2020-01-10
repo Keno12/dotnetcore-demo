@@ -1,0 +1,2 @@
+# dotnetcore-demo
+dotnetcore test
