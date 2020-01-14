@@ -12,5 +12,10 @@
     <PackageReference Include="System.Security.Claims" Version="4.3.0" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\dotnetcore-model\01dotnetcore-model.csproj" />
+    <ProjectReference Include="..\dotnetcore-respository\02dotnetcore-respository.csproj" />
+  </ItemGroup>
+
 
 </Project>
