@@ -1,14 +1,17 @@
 ﻿using Dapper;
 using dotnetcore_model;
+using dotnetcore_respository.BaseRepository;
+using System;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Data;
 using System.Data.SqlClient;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace dotnetcore_respository
 {
-    public class CustomerRespository : ICustomerRespository
+    public class CustomerRespository : RepositoryBase<Customer>, ICustomerRespository
     {
         private readonly IDbConnection _db;
 
@@ -22,9 +25,10 @@ namespace dotnetcore_respository
             return this._db.Query<Customer>("SELECT TOP " + amount + " [CustomerID],[CustomerFirstName],[CustomerLastName],[IsActive] FROM [Customer] ORDER BY CustomerID " + sort).ToList();
         }
 
-        public Customer GetSingleCustomer(int customerId)
+        public async Task<Customer> GetCustomer(Guid CustomerID)
         {
-            return _db.Query<Customer>("SELECT[CustomerID],[CustomerFirstName],[CustomerLastName],[IsActive] FROM [Customer] WHERE CustomerID =@CustomerID", new { CustomerID = customerId }).SingleOrDefault();
+            string sql = @"SELECT [CustomerID],[CustomerFirstName],[CustomerLastName],[IsActive] FROM [Customer] WHERE CustomerID =@CustomerID";
+            return await Detail(CustomerID, sql);
         }
 
         public bool InsertCustomer(Customer ourCustomer)
@@ -40,17 +44,10 @@ namespace dotnetcore_respository
             return false;
         }
 
-        public bool DeleteCustomer(int customerId)
+        public async Task<bool> DeleteCustomer(Guid CustomerID)
         {
-            int rowsAffected = this._db.Execute(@"DELETE FROM [Customer] WHERE CustomerID = @CustomerID",
-                new { CustomerID = customerId });
-
-            if (rowsAffected > 0)
-            {
-                return true;
-            }
-
-            return false;
+            string sql = @"DELETE FROM[Customer] WHERE CustomerID = @CustomerID";
+            return await Delete(CustomerID, sql);
         }
 
         public bool UpdateCustomer(Customer ourCustomer)

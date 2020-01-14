@@ -13,11 +13,11 @@ namespace dotnetcore_api.Controllers
     [ApiController]
     public class CustomerController : ControllerBase
     {
-        private CustomerRespository _ourCustomerRespository;
+        private CustomerRespository _customerRespository;
 
         public CustomerController()
         {
-            _ourCustomerRespository = new CustomerRespository();
+            _customerRespository = new CustomerRespository();
         }
 
         // GET: /Customer
@@ -25,7 +25,7 @@ namespace dotnetcore_api.Controllers
         [HttpGet]
         public List<Customer> Get()
         {
-            return _ourCustomerRespository.GetCustomers(10, "ASC");
+            return _customerRespository.GetCustomers(10, "ASC");
         }
 
         // GET: /Customer/10/ASC
@@ -33,15 +33,23 @@ namespace dotnetcore_api.Controllers
         [HttpGet]
         public List<Customer> Get(int amount, string sort)
         {
-            return _ourCustomerRespository.GetCustomers(amount, sort);
+            return _customerRespository.GetCustomers(amount, sort);
         }
 
         // GET: /Customer/5
         [Route("Customers/{id}")]
         [HttpGet]
-        public Customer Get(int id)
+        public async Task<Customer> Get(Guid id)
         {
-            return _ourCustomerRespository.GetSingleCustomer(id);
+            try
+            {
+              return await _customerRespository.GetCustomer(id);
+            }
+            catch (Exception ex)
+            {
+                throw new ArgumentException(ex.Message);
+            }
+
         }
 
         // POST: /Customer
@@ -50,7 +58,7 @@ namespace dotnetcore_api.Controllers
         public bool Post([FromBody]Customer ourCustomer)
         {
             //return true;
-            return _ourCustomerRespository.InsertCustomer(ourCustomer);
+            return _customerRespository.InsertCustomer(ourCustomer);
         }
 
         // PUT: api/Customer/5
@@ -58,15 +66,23 @@ namespace dotnetcore_api.Controllers
         [HttpPut]
         public bool Put([FromBody]Customer ourCustomer)
         {
-            return _ourCustomerRespository.UpdateCustomer(ourCustomer);
+            return _customerRespository.UpdateCustomer(ourCustomer);
         }
 
         // DELETE: api/Customer/5
         [Route("Customers/{id}")]
         [HttpDelete]
-        public bool Delete(int id)
+        public async Task DeleteCustomer(Guid id)
         {
-            return _ourCustomerRespository.DeleteCustomer(id);
+            try
+            {
+                await _customerRespository.DeleteCustomer(id);
+            }
+            catch (Exception ex)
+            {
+                throw new ArgumentException(ex.Message);
+            }
+
         }
     }
 }

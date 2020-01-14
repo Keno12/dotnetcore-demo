@@ -4,7 +4,7 @@ namespace dotnetcore_model
 {
 	public class Customer
 	{
-		public int CustomerID { get; set; }
+		public Guid CustomerID { get; set; }
 
 		public string CustomerFirstName { get; set; }
 
