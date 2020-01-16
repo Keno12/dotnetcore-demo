@@ -6,9 +6,9 @@ namespace dotnetcore_respository.BaseRepository
 {
     public interface IRepositoryBase<T>
     {
-        Task Insert(T entity, string insertSql);
+        Task<bool> Insert(T entity, string insertSql);
 
-        Task Update(T entity, string updateSql);
+        Task<bool> Update(T entity, string updateSql);
 
         Task<bool> Delete(Guid Id, string deleteSql);
 

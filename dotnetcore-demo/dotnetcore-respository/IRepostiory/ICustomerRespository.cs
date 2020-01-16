@@ -7,14 +7,14 @@ namespace dotnetcore_respository
 {
     public interface ICustomerRespository
     {
-        List<Customer> GetCustomers(int amount, string sort);
+        Task<List<Customer>> GetCustomersAsync(int amount, string sort);
 
-        Task<Customer> GetCustomer(Guid CustomerID);
+        Task<Customer> GetCustomerAsync(Guid CustomerID);
 
-        bool InsertCustomer(Customer ourCustomer);
+        Task<bool> InsertCustomerAsync(Customer customer);
 
-        Task<bool> DeleteCustomer(Guid CustomerID);
+        Task<bool> DeleteCustomerAsync(Guid CustomerID);
 
-        bool UpdateCustomer(Customer ourCustomer);
+        Task<bool> UpdateCustomerAsync(Customer customer);
     }
 }

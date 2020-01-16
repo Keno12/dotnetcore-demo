@@ -23,17 +23,26 @@ namespace dotnetcore_api.Controllers
         // GET: /Customer
         [Route("Customers")]
         [HttpGet]
-        public List<Customer> Get()
+        public async Task<List<Customer>> Get()
         {
-            return _customerRespository.GetCustomers(10, "ASC");
+            try
+            {
+                return await _customerRespository.GetCustomersAsync(10, "ASC");
+            }
+            catch (Exception ex)
+            {
+                throw new ArgumentException(ex.Message);
+            }
+
         }
 
         // GET: /Customer/10/ASC
         [Route("Customers/{amount}/{sort}")]
         [HttpGet]
-        public List<Customer> Get(int amount, string sort)
+        public async Task<List<Customer>> Get(int amount, string sort)
         {
-            return _customerRespository.GetCustomers(amount, sort);
+            return await _customerRespository.GetCustomersAsync(amount, sort);
+
         }
 
         // GET: /Customer/5
@@ -43,7 +52,7 @@ namespace dotnetcore_api.Controllers
         {
             try
             {
-              return await _customerRespository.GetCustomer(id);
+                return await _customerRespository.GetCustomerAsync(id);
             }
             catch (Exception ex)
             {
@@ -55,18 +64,18 @@ namespace dotnetcore_api.Controllers
         // POST: /Customer
         [Route("Customers")]
         [HttpPost]
-        public bool Post([FromBody]Customer ourCustomer)
+        public async Task<bool> Post([FromBody]Customer ourCustomer)
         {
-            //return true;
-            return _customerRespository.InsertCustomer(ourCustomer);
+
+            return await _customerRespository.InsertCustomerAsync(ourCustomer);
         }
 
         // PUT: api/Customer/5
         [Route("Customers")]
         [HttpPut]
-        public bool Put([FromBody]Customer ourCustomer)
+        public async Task<bool> Put([FromBody]Customer ourCustomer)
         {
-            return _customerRespository.UpdateCustomer(ourCustomer);
+            return await _customerRespository.UpdateCustomerAsync(ourCustomer);
         }
 
         // DELETE: api/Customer/5
@@ -76,7 +85,7 @@ namespace dotnetcore_api.Controllers
         {
             try
             {
-                await _customerRespository.DeleteCustomer(id);
+                await _customerRespository.DeleteCustomerAsync(id);
             }
             catch (Exception ex)
             {

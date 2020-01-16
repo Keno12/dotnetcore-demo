@@ -20,48 +20,35 @@ namespace dotnetcore_respository
             _db = new SqlConnection(ConfigurationManager.ConnectionStrings["DefaultConnection"].ConnectionString);
         }
 
-        public List<Customer> GetCustomers(int amount, string sort)
+        public async Task<List<Customer>> GetCustomersAsync(int amount, string sort)
         {
-            return this._db.Query<Customer>("SELECT TOP " + amount + " [CustomerID],[CustomerFirstName],[CustomerLastName],[IsActive] FROM [Customer] ORDER BY CustomerID " + sort).ToList();
+            string sql = string.Format("SELECT TOP {0} [CustomerID],[CustomerFirstName],[CustomerLastName],[IsActive] FROM [Customer] ORDER BY CustomerID {1}", amount, sort);
+            return await Select(sql);
         }
 
-        public async Task<Customer> GetCustomer(Guid CustomerID)
+        public async Task<Customer> GetCustomerAsync(Guid CustomerID)
         {
             string sql = @"SELECT [CustomerID],[CustomerFirstName],[CustomerLastName],[IsActive] FROM [Customer] WHERE CustomerID =@CustomerID";
             return await Detail(CustomerID, sql);
         }
 
-        public bool InsertCustomer(Customer ourCustomer)
+        public async Task<bool> InsertCustomerAsync(Customer customer)
         {
-            int rowsAffected = this._db.Execute(@"INSERT Customer([CustomerFirstName],[CustomerLastName],[IsActive]) values (@CustomerFirstName, @CustomerLastName, @IsActive)",
-                new { CustomerFirstName = ourCustomer.CustomerFirstName, CustomerLastName = ourCustomer.CustomerLastName, IsActive = true });
+            string sql = @"INSERT Customer([CustomerFirstName],[CustomerLastName],[IsActive]) values (@CustomerFirstName, @CustomerLastName, @IsActive)";
+            return await Insert(customer, sql);
 
-            if (rowsAffected > 0)
-            {
-                return true;
-            }
-
-            return false;
         }
 
-        public async Task<bool> DeleteCustomer(Guid CustomerID)
+        public async Task<bool> DeleteCustomerAsync(Guid CustomerID)
         {
             string sql = @"DELETE FROM[Customer] WHERE CustomerID = @CustomerID";
             return await Delete(CustomerID, sql);
         }
 
-        public bool UpdateCustomer(Customer ourCustomer)
+        public async Task<bool> UpdateCustomerAsync(Customer customer)
         {
-            int rowsAffected = this._db.Execute(
-                        "UPDATE [Customer] SET [CustomerFirstName] = @CustomerFirstName ,[CustomerLastName] = @CustomerLastName, [IsActive] = @IsActive WHERE CustomerID = " +
-                        ourCustomer.CustomerID, ourCustomer);
-
-            if (rowsAffected > 0)
-            {
-                return true;
-            }
-
-            return false;
+            string sql = "UPDATE [Customer] SET [CustomerFirstName] = @CustomerFirstName ,[CustomerLastName] = @CustomerLastName, [IsActive] = @IsActive WHERE CustomerID = ";
+            return await Update(customer, sql);
         }
     }
 }

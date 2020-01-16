@@ -13,8 +13,8 @@ namespace dotnetcore_respository.BaseRepository
         {
             using (IDbConnection conn = DataBaseConfig.GetSqlConnection())
             {
-               int count= await conn.ExecuteAsync(deleteSql, new { Id = Id });
-                if (count>0)
+                int count = await conn.ExecuteAsync(deleteSql, new { Id = Id });
+                if (count > 0)
                 {
                     return true;
                 }
@@ -25,8 +25,7 @@ namespace dotnetcore_respository.BaseRepository
         public async Task<T> Detail(Guid Id, string detailSql)
         {
             using (IDbConnection conn = DataBaseConfig.GetSqlConnection())
-            {
-                //string querySql = @"SELECT Id, UserName, Password, Gender, Birthday, CreateDate, IsDelete FROM dbo.Users WHERE Id=@Id";
+            {   
                 return await conn.QueryFirstOrDefaultAsync<T>(detailSql, new { Id = Id });
             }
         }
@@ -40,11 +39,16 @@ namespace dotnetcore_respository.BaseRepository
             }
         }
 
-        public async Task Insert(T entity, string insertSql)
+        public async Task<bool> Insert(T entity, string insertSql)
         {
             using (IDbConnection conn = DataBaseConfig.GetSqlConnection())
             {
-                await conn.ExecuteAsync(insertSql, entity);
+                int count = await conn.ExecuteAsync(insertSql, entity);
+                if (count > 0)
+                {
+                    return true;
+                }
+                return false;
             }
         }
 
@@ -52,16 +56,20 @@ namespace dotnetcore_respository.BaseRepository
         {
             using (IDbConnection conn = DataBaseConfig.GetSqlConnection())
             {
-                //string selectSql = @"SELECT Id, UserName, Password, Gender, Birthday, CreateDate, IsDelete FROM dbo.Users";
                 return await Task.Run(() => conn.Query<T>(selectSql).ToList());
             }
         }
 
-        public async Task Update(T entity, string updateSql)
+        public async Task<bool> Update(T entity, string updateSql)
         {
             using (IDbConnection conn = DataBaseConfig.GetSqlConnection())
             {
-                await conn.ExecuteAsync(updateSql, entity);
+                int count = await conn.ExecuteAsync(updateSql, entity);
+                if (count > 0)
+                {
+                    return true;
+                }
+                return false;
             }
         }
     }
