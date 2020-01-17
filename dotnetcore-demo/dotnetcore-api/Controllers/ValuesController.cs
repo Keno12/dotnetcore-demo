@@ -5,47 +5,50 @@ using System.Linq;
 using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
+using dotnetcore_api.Model;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 
 namespace dotnetcore_api.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/[controller]/[action]")]
     [ApiController]
     public class ValuesController : ControllerBase
     {
-        // GET api/values
-        [HttpGet]
-        public ActionResult<IEnumerable<string>> Get()
+        private readonly JwtSetting setting;
+        public ValuesController(IOptions<JwtSetting> _setting)
         {
-            // 简单创建一个token令牌
+            setting = _setting.Value;
+        }
 
-            // 创建声明数组
-            var claims = new Claim[]
-           {
-                new Claim(ClaimTypes.Name, "laozhang"),
-                new Claim(JwtRegisteredClaimNames.Email, "laozhang@qq.com"),
-                new Claim(JwtRegisteredClaimNames.Sub, "1"),//主题subject，就是id uid
-           };
+        // GET api/GetToken 简单创建一个token令牌
+        [HttpGet]
+        public IActionResult GetToken()
+        {
+            try
+            {  
+                //1.创建声明数组
+                var claims = new Claim[]
+                {
+                    new Claim(ClaimTypes.Name, "wangxiaodao"),
+                    new Claim(JwtRegisteredClaimNames.Email, "wangkun32@126.com"),
+                    new Claim(ClaimTypes.Role, "admin")
+                };
 
-            // 实例化 token 对象
+                //2.实例化 token 对象
+                var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(setting.SecretKey));//至少16位密钥
+                var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
+                var token = new JwtSecurityToken(setting.Issuer, setting.Audience, claims, DateTime.Now, DateTime.Now.AddMinutes(30), creds);
 
-            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("laozhanglaozhang"));//至少16位密钥
-
-            var token = new JwtSecurityToken(
-                issuer: "http://localhost:5000",
-                audience: "http://localhost:5001",
-                claims: claims,
-                expires: DateTime.Now.AddHours(1),
-                signingCredentials: new SigningCredentials(key, SecurityAlgorithms.HmacSha256)
-            );
-
-
-            // 生成token
-            var jwtToken = new JwtSecurityTokenHandler().WriteToken(token);
-
-            return new string[] { jwtToken };
+                //3.生成token
+                return Ok(new { Token = new JwtSecurityTokenHandler().WriteToken(token) });
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
 
     }

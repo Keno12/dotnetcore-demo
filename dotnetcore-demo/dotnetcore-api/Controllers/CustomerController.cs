@@ -23,7 +23,7 @@ namespace dotnetcore_api.Controllers
         // GET: /Customer
         [Route("Customers")]
         [HttpGet]
-        public async Task<List<Customer>> Get()
+        public async Task<List<Customer>> GetAsync()
         {
             try
             {
@@ -39,7 +39,7 @@ namespace dotnetcore_api.Controllers
         // GET: /Customer/10/ASC
         [Route("Customers/{amount}/{sort}")]
         [HttpGet]
-        public async Task<List<Customer>> Get(int amount, string sort)
+        public async Task<List<Customer>> GetAsync(int amount, string sort)
         {
             return await _customerRespository.GetCustomersAsync(amount, sort);
 
@@ -48,7 +48,7 @@ namespace dotnetcore_api.Controllers
         // GET: /Customer/5
         [Route("Customers/{id}")]
         [HttpGet] 
-        public async Task<Customer> Get(Guid id)
+        public async Task<Customer> GetAsync(Guid id)
         {
             try
             {
@@ -64,7 +64,7 @@ namespace dotnetcore_api.Controllers
         // POST: /Customer
         [Route("Customers")]
         [HttpPost]
-        public async Task<bool> Post([FromBody]Customer ourCustomer)
+        public async Task<bool> PostAsync([FromBody]Customer ourCustomer)
         {
 
             return await _customerRespository.InsertCustomerAsync(ourCustomer);
@@ -73,7 +73,7 @@ namespace dotnetcore_api.Controllers
         // PUT: api/Customer/5
         [Route("Customers")]
         [HttpPut]
-        public async Task<bool> Put([FromBody]Customer ourCustomer)
+        public async Task<bool> PutAsync([FromBody]Customer ourCustomer)
         {
             return await _customerRespository.UpdateCustomerAsync(ourCustomer);
         }
@@ -81,7 +81,7 @@ namespace dotnetcore_api.Controllers
         // DELETE: api/Customer/5
         [Route("Customers/{id}")]
         [HttpDelete]
-        public async Task DeleteCustomer(Guid id)
+        public async Task DeleteCustomerAsync(Guid id)
         {
             try
             {
