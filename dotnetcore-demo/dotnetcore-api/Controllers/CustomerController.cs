@@ -47,7 +47,7 @@ namespace dotnetcore_api.Controllers
 
         // GET: /Customer/5
         [Route("Customers/{id}")]
-        [HttpGet]
+        [HttpGet] 
         public async Task<Customer> Get(Guid id)
         {
             try

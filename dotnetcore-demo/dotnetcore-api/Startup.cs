@@ -36,13 +36,13 @@ namespace dotnetcore_api
                 {
                     Title = "Customer API½Ó¿ÚÎÄµµ",
                     Version = "v1",
-                    Description = "RESTful API for Dinner",
+                    Description = "RESTful API for Customer",
                     //TermsOfService = "None",
-                    Contact = new OpenApiContact { Name = "wangxiaodao", Email = "ere3453@123"}
+                    Contact = new OpenApiContact { Name = "wangxiaodao", Email = "wangkun32@126.com" }
                 });
                 options.IgnoreObsoleteActions();
                 options.DocInclusionPredicate((docName, description) => true);
-                options.IncludeXmlComments(Path.Combine(PlatformServices.Default.Application.ApplicationBasePath, "Dinner.WebApi.xml"));
+               // options.IncludeXmlComments(Path.Combine(PlatformServices.Default.Application.ApplicationBasePath, "Dinner.WebApi.xml"));
             });
 
 
